@@ -13,37 +13,3 @@ $thumbprint = (New-SelfSignedCertificate -DnsName $env:COMPUTERNAME -CertStoreLo
 # Create a new WinRM listener using this certificate
 $command = "winrm create winrm/config/Listener?Address=*+Transport=HTTPS @{Hostname=""$env:computername""; CertificateThumbprint=""$thumbprint""}"
 cmd.exe /C $command
-
-# Ensure winget is available
-if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
-    Write-Host "winget is not installed or not available in PATH."
-    exit 1
-}
-
-# Install applications using winget
-$apps = @(
-    "ScooterSoftware.BeyondCompare.4",
-    "Git.Git",
-    "Microsoft.Office",
-    "Microsoft.OneDrive",
-    "GitHub.cli",
-    "Microsoft.PowerShell",
-    "Kitware.CMake",
-    "Microsoft.Edge",
-    "Microsoft.VisualStudio.2022.Professional",
-    "AgileBits.1Password",
-    "AgileBits.1Password.CLI",
-    "jdx.mise",
-    "Microsoft.VisualStudioCode",
-    "Canonical.Ubuntu",
-    "Microsoft.Teams",
-    "Microsoft.WindowsTerminal",
-    "Microsoft.WSL"
-)
-
-foreach ($app in $apps) {
-    Write-Host "Installing $app..."
-    Start-Process -NoNewWindow -Wait -FilePath "winget" -ArgumentList "install --id=$app --silent --accept-source-agreements --accept-package-agreements"
-}
-
-Write-Host "All applications installed successfully."
