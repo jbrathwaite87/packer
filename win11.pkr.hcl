@@ -63,8 +63,8 @@ build {
   provisioner "powershell" {
     inline = [
       "Write-Output 'Installing standalone WinGet...'",
-      "Invoke-RestMethod -Uri 'https://github.com/microsoft/winget-cli/releases/download/v1.7.10861/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle' -OutFile 'C:\Software\WinGet.msixbundle'",
-      "Add-AppxPackage -Path 'C:\Software\WinGet.msixbundle'",
+      "Invoke-RestMethod -Uri 'https://github.com/microsoft/winget-cli/releases/download/v1.7.10861/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle' -OutFile 'C:\\Software\\WinGet.msixbundle'",
+      "Add-AppxPackage -Path 'C:\\Software\\WinGet.msixbundle'",
       "Write-Output 'WinGet standalone installed successfully.'"
     ]
   }
