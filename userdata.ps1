@@ -13,10 +13,3 @@ $thumbprint = (New-SelfSignedCertificate -DnsName $env:COMPUTERNAME -CertStoreLo
 # Create a new WinRM listener using this certificate
 $command = "winrm create winrm/config/Listener?Address=*+Transport=HTTPS @{Hostname=""$env:computername""; CertificateThumbprint=""$thumbprint""}"
 cmd.exe /C $command
-
-# Ensure winget is available
-if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
-    Write-Host "winget is not installed or not available in PATH."
-    exit 1
-}
-
