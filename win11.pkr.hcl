@@ -49,40 +49,15 @@ build {
 
   provisioner "powershell" {
     inline = [
-      "New-Item -ItemType Directory -Path 'c:/Software' -Force",
-      "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12",
-      "Write-Output 'Installing Visual Studio Code'",
-      "Invoke-RestMethod -uri 'https://code.visualstudio.com/sha/download?build=stable&os=win32-x64' -OutFile 'c:/Software/VSCodeSetup-x64-1.87.2.exe'",
-      "Start-Process c:/Software/VSCodeSetup-x64-1.87.2.exe -ArgumentList '/VERYSILENT /NORESTART /MERGETASKS=!runcode' -Wait",
-      "Write-Output 'Installing Git for Windows'",
-      "Invoke-RestMethod -uri 'https://github.com/git-for-windows/git/releases/download/v2.44.0.windows.1/Git-2.44.0-64-bit.exe' -OutFile 'c:/Software/Git-2.44.0-64-bit.exe'",
-      "Start-Process c:/Software/Git-2.44.0-64-bit.exe -ArgumentList '/SP- /VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -Wait"
-    ]
-  }
-
-  provisioner "powershell" {
-    inline = [
-      "Write-Output 'Installing standalone WinGet...'",
-      "Invoke-RestMethod -Uri 'https://github.com/microsoft/winget-cli/releases/download/v1.7.10861/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle' -OutFile 'C:\\Software\\WinGet.msixbundle'",
-      "Add-AppxPackage -Path 'C:\\Software\\WinGet.msixbundle'",
-      "Write-Output 'WinGet standalone installed successfully.'"
-    ]
-  }
-
-  provisioner "powershell" {
-    inline = [
-      "Write-Output 'Checking if WinGet is installed...'",
-      "$wingetPath = 'C:\\Program Files\\WindowsApps\\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\\winget.exe'",
-      "if (-not (Test-Path $wingetPath)) {",
-      "    Write-Output 'WinGet is NOT installed. Skipping installation of applications via WinGet.'",
-      "} else {",
-      "    Write-Output 'WinGet is installed. Proceeding with installation...'",
-      "    $apps = @('ScooterSoftware.BeyondCompare.4', 'Kitware.CMake', 'Microsoft.VisualStudio.2022.Professional', 'AgileBits.1Password', 'AgileBits.1Password.CLI', 'jdx.mise', 'Canonical.Ubuntu', 'Microsoft.WindowsTerminal', 'Microsoft.WSL')",
-      "    foreach ($app in $apps) {",
-      "        Write-Output \"Installing $app via WinGet...\"",
-      "        & $wingetPath install --id $app -e --accept-source-agreements --accept-package-agreements",
-      "    }",
-      "}"
+      "Write-Output 'Installing Chocolatey...'",
+      "Set-ExecutionPolicy Bypass -Scope Process -Force",
+      "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072",
+      "Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
+      "Write-Output 'Chocolatey installed successfully. Installing applications...'",
+      "choco install beyondcompare.4 visualstudio2022professional 1password 1password-cli wsl op -y",
+      "Write-Output 'Applications installed successfully using Chocolatey. Uninstalling Chocolatey...'",
+      "choco uninstall chocolatey -y",
+      "Write-Output 'Chocolatey uninstalled successfully.'"
     ]
   }
 
