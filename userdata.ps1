@@ -20,31 +20,3 @@ if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
     exit 1
 }
 
-# Install applications using winget
-$apps = @(
-    "ScooterSoftware.BeyondCompare.4",
-    #"Git.Git",
-    "Microsoft.Office",
-    "Microsoft.OneDrive",
-    "GitHub.cli",
-    "Microsoft.PowerShell",
-    "Kitware.CMake",
-    #"Microsoft.Edge",
-    "Microsoft.VisualStudio.2022.Professional",
-    "AgileBits.1Password",
-    "AgileBits.1Password.CLI",
-    "jdx.mise",
-    #"Microsoft.VisualStudioCode",
-    #"Canonical.Ubuntu",
-    #"Microsoft.Teams",
-    "Microsoft.WindowsTerminal",
-    "Microsoft.WSL"
-)
-
-foreach ($app in $apps) {
-    Write-Host "Installing $app..."
-    Start-Process -NoNewWindow -Wait -FilePath "winget" -ArgumentList "install --id=$app --silent --accept-source-agreements --accept-package-agreements"
-}
-
-Write-Host "All applications installed successfully."
-
