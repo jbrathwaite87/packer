@@ -66,32 +66,33 @@ build {
     ]
   }
 
-    # Install applications via WinGet using the CLI directly
+  # Install applications via WinGet using the CLI directly
   provisioner "powershell" {
-    inline = [
-      "Write-Output 'Checking if WinGet is installed...'",
-      "if (-not (Test-Path \"C:\\Program Files\\WindowsApps\\Microsoft.DesktopAppInstaller_*\\winget.exe\")) {",
-      "    Write-Output 'WinGet is not installed. Skipping installation of applications via WinGet.'",
-      "} else {",
-      "    Write-Output 'WinGet is installed. Proceeding with package installation...'",
-      "    $apps = @(",
-      "        'ScooterSoftware.BeyondCompare.4',",
-      "        'Kitware.CMake',",
-      "        'Microsoft.VisualStudio.2022.Professional',",
-      "        'AgileBits.1Password',",
-      "        'AgileBits.1Password.CLI',",
-      "        'jdx.mise',",
-      "        'Canonical.Ubuntu',",
-      "        'Microsoft.WindowsTerminal',",
-      "        'Microsoft.WSL'",
-      "    )",
-      "    foreach ($app in $apps) {",
-      "        Write-Output \"Installing $app via WinGet...\"",
-      "        Start-Process -FilePath winget -ArgumentList 'install --id', $app, '-e --accept-source-agreements --accept-package-agreements' -NoNewWindow -Wait",
-      "    }",
-      "}"
-    ]
-  }
+  inline = [
+    "Write-Output 'Checking if WinGet is installed...'",
+    "$wingetPath = (Get-ChildItem -Path 'C:\\Program Files\\WindowsApps' -Recurse -Filter winget.exe -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName | Select-Object -First 1)",
+    "if (-not $wingetPath) {",
+    "    Write-Output 'WinGet is NOT installed. Skipping installation of applications via WinGet.'",
+    "} else {",
+    "    Write-Output 'WinGet is installed at: ' + $wingetPath",
+    "    $apps = @(",
+    "        'ScooterSoftware.BeyondCompare.4',",
+    "        'Kitware.CMake',",
+    "        'Microsoft.VisualStudio.2022.Professional',",
+    "        'AgileBits.1Password',",
+    "        'AgileBits.1Password.CLI',",
+    "        'jdx.mise',",
+    "        'Canonical.Ubuntu',",
+    "        'Microsoft.WindowsTerminal',",
+    "        'Microsoft.WSL'",
+    "    )",
+    "    foreach ($app in $apps) {",
+    "        Write-Output \"Installing $app via WinGet...\"",
+    "        & $wingetPath install --id $app -e --accept-source-agreements --accept-package-agreements",
+    "    }",
+    "}"
+  ]
+}
 
 
   # Run Windows updates
