@@ -54,23 +54,17 @@ build {
   }
 
   # Schedule a task to run the batch script in an interactive context.
-  provisioner "powershell" {
-    inline = [
-      "Write-Output 'Scheduling winget-install batch task due to WinRM limitations...'",
-      "$taskName = 'WingetBatchTask'",
-      "$batchPath = 'C:\\Windows\\Temp\\winget-install.bat'",
-      "# Calculate a start time one minute in the future",
-      "$startTime = (Get-Date).AddMinutes(1).ToString('HH:mm')",
-      "# Create a scheduled task that runs the batch file with highest privileges",
-      "schtasks /Create /TN $taskName /TR \"cmd.exe /c %windir%\\Temp\\winget-install.bat\" /SC ONCE /ST $startTime /RL HIGHEST /F",
-      "# Run the scheduled task immediately",
-      "schtasks /Run /TN $taskName",
-      "Write-Output 'Waiting for scheduled task to complete (approx. 3 minutes)...'",
-      "Start-Sleep -Seconds 180",
-      "# Delete the scheduled task",
-      "schtasks /Delete /TN $taskName /F"
-    ]
-  }
+ provisioner "powershell" {
+  inline = [
+    "$desktopPath = [System.Environment]::GetFolderPath('Desktop')",
+    "$startupPath = Join-Path $env:APPDATA 'Microsoft\\Windows\\Start Menu\\Programs\\Startup'",
+    "$scriptSource = 'C:\\Windows\\Temp\\winget-install.bat'",
+    "$scriptDestination = Join-Path $desktopPath 'winget-install.bat'",
+    "Copy-Item -Path $scriptSource -Destination $scriptDestination -Force",
+    "Copy-Item -Path $scriptSource -Destination $startupPath -Force",
+    "Write-Output 'winget-install.bat copied to Desktop and Startup folder for manual or automatic execution.'"
+  ]
+}
 
   provisioner "windows-update" {
     search_criteria = "IsInstalled=0"
