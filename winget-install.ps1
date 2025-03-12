@@ -60,4 +60,37 @@ foreach ($vse in $vscode_extensions) {
     }
 }
 
+
+
+# Enable Developer Mode
+Function Enable-DevMode {
+    Write-Host "Enabling Developer Mode..."
+    $RegistryKeyPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock"
+    if (-not (Test-Path -Path $RegistryKeyPath)) {
+        New-Item -Path $RegistryKeyPath -ItemType Directory -Force
+    }
+    New-ItemProperty -Path $RegistryKeyPath -Name AllowDevelopmentWithoutDevLicense -PropertyType DWORD -Value 1 -Force
+
+    # Enable Windows Subsystem for Linux
+    Write-Host "Enabling Windows Subsystem for Linux..."
+    Enable-WindowsOptionalFeature -Online -NoRestart -FeatureName Microsoft-Windows-Subsystem-Linux
+}
+
+# Install Chocolatey & Developer Tools
+Function Install-DevTools {
+    Write-Host "Installing Chocolatey..."
+    Invoke-WebRequest https://community.chocolatey.org/install.ps1 -UseBasicParsing | Invoke-Expression
+
+    Write-Host "Installing Developer Tools via Chocolatey..."
+    choco install powershell-packagemanagement -y
+    choco install git.install -y
+    choco install beyondcompare -y
+    choco install nodejs.install -y
+    choco install nuget.commandline -y
+
+    Write-Host "Developer tools installation completed."
+}
+
+
+
 Write-Output "All installations and configurations are complete!"
