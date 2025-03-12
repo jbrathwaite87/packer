@@ -10,13 +10,26 @@ Foreach ($app in $unwantedApps) {
 }
 
 # Ensure WSL is installed before running install
+# Ensure WSL is installed before running install
 Write-Output "Checking WSL..."
-$wslInstalled = wsl --status 2>$null
-if (!$wslInstalled) {
-    Write-Host "Installing WSL..."
+try {
+    $wslStatus = wsl --status 2>$null
+    Write-Output "WSL is already installed."
+} catch {
+    Write-Output "WSL is not installed. Installing now..."
     wsl --install
-} else {
-    Write-Host "WSL is already installed."
+
+    # Wait for installation to complete
+    Start-Sleep -Seconds 10
+
+    # Verify Installation
+    try {
+        $wslStatus = wsl --status 2>$null
+        Write-Output "WSL installation completed successfully."
+    } catch {
+        Write-Output "WSL installation failed. Exiting!"
+        exit 1
+    }
 }
 
 # Install MATLAB and required toolboxes
