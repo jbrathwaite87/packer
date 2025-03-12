@@ -27,9 +27,6 @@ $winGetPath = (Get-Command winget -ErrorAction SilentlyContinue).Source
 if (-not $winGetPath) {
     Write-Host "🚨 WinGet not found! Installing dependencies..."
     
-    # Install Microsoft VCLibs dependency
-    Install-AppxPackage -url "https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx" -fileName "VCLibs.appx"
-
     # Install WinGet
     $releases_url = 'https://api.github.com/repos/microsoft/winget-cli/releases/latest'
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
