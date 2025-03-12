@@ -9,29 +9,6 @@ Foreach ($app in $unwantedApps) {
     Get-AppxPackage -allusers $app | Remove-AppxPackage -ErrorAction SilentlyContinue
 }
 
-# Ensure WSL is installed before running install
-# Ensure WSL is installed before running install
-Write-Output "Checking WSL..."
-try {
-    $wslStatus = wsl --status 2>$null
-    Write-Output "WSL is already installed."
-} catch {
-    Write-Output "WSL is not installed. Installing now..."
-    wsl --install
-
-    # Wait for installation to complete
-    Start-Sleep -Seconds 10
-
-    # Verify Installation
-    try {
-        $wslStatus = wsl --status 2>$null
-        Write-Output "WSL installation completed successfully."
-    } catch {
-        Write-Output "WSL installation failed. Exiting!"
-        exit 1
-    }
-}
-
 # Install MATLAB and required toolboxes
 Write-Output "Downloading MATLAB Package Manager (MPM)..."
 $mpmPath = "C:\Windows\Temp\mpm.exe"
