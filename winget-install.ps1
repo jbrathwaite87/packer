@@ -60,8 +60,6 @@ foreach ($vse in $vscode_extensions) {
     }
 }
 
-
-
 # Enable Developer Mode
 Function Enable-DevMode {
     Write-Host "Enabling Developer Mode..."
@@ -91,6 +89,8 @@ Function Install-DevTools {
     Write-Host "Developer tools installation completed."
 }
 
-
+# Call the functions to enable developer mode and install developer tools
+Enable-DevMode
+Install-DevTools
 
 Write-Output "All installations and configurations are complete!"
