@@ -4,10 +4,18 @@ $ErrorActionPreference = "Stop"
 # Function to download and install Appx packages
 Function Install-AppxPackage {
     param ([string]$url, [string]$fileName)
-    
-    $tempPath = "$env:TEMP\$fileName"
-    Write-Host "📥 Downloading $fileName..."
+
+    $tempPath = "C:\Windows\Temp\$fileName"
+
+    Write-Host "📥 Downloading $fileName to $tempPath..."
     Invoke-WebRequest -Uri $url -OutFile $tempPath -UseBasicParsing
+    
+    # Verify download succeeded
+    if (!(Test-Path $tempPath)) {
+        Write-Host "❌ Failed to download $fileName. Exiting!"
+        exit 1
+    }
+
     Write-Host "📦 Installing $fileName..."
     Add-AppxPackage -Path $tempPath
 }
