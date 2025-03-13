@@ -85,6 +85,7 @@ Function Install-DevTools {
     choco install beyondcompare -y
     choco install nodejs.install -y
     choco install nuget.commandline -y
+    choco install visualstudio2022professional -y
 
     Write-Host "Developer tools installation completed."
 }
